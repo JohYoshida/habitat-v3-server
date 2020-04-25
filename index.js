@@ -96,7 +96,7 @@ app.post("/workout", (req, res) => {
   const { exercise_id, reps, sets } = req.body;
   const id = uuid();
   const createdAt = moment().format();
-  knex("workout")
+  knex("workouts")
     .insert({ id, exercise_id, reps, sets, createdAt })
     .then(() => {
       res.send({ msg: "Registered workout", id });
