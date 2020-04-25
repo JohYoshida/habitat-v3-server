@@ -60,6 +60,19 @@ app.post("/exercise", (req, res) => {
     });
 });
 
+app.delete("/exercise", (req, res) => {
+  const { id, name } = req.body;
+  knex("exercises")
+    .where({ id })
+    .then(() => {
+      res.send({ msg: "Deleted exercise", name, id });
+    })
+    .catch(err => {
+      res.send({ msg: "Failed to delete exercise."});
+      console.log("Error!", err);
+    });
+});
+
 app.get("/workouts", (req, res) => {
   const { id, exercise_id, reps, sets } = req.body;
   // Get workouts
