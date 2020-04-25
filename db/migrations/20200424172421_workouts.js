@@ -7,6 +7,7 @@ exports.up = function(knex) {
       table.uuid("exercise_id");
       table.integer("reps");
       table.integer("sets");
+      table.string("createdAt");
     }),
   ]);
 };
