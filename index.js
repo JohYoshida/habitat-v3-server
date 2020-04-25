@@ -68,6 +68,7 @@ app.delete("/exercise", (req, res) => {
   const { id, name } = req.body;
   knex("exercises")
     .where({ id })
+    .del()
     .then(() => {
       res.send({ msg: "Deleted exercise", name, id });
     })
