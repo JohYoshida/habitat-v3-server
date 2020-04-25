@@ -4,6 +4,7 @@
   "description": "Webserver for my Habitat v3 Expo app",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Joh Yoshida",
