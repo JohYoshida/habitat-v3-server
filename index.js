@@ -70,7 +70,22 @@ app.delete("/exercise", (req, res) => {
     .where({ id })
     .del()
     .then(() => {
-      res.send({ msg: "Deleted exercise", name, id });
+      knex("workouts")
+        .where({ exercise_id: id })
+        .del()
+        .then(() => {
+          res.send({
+            msg: "Deleted exercise and associated workouts",
+            name,
+            id
+          });
+        })
+        .catch(err => {
+          res.send({
+            msg: "Failed to delete workouts associated with exercise."
+          });
+          console.log("Error!", err);
+        });
     })
     .catch(err => {
       res.send({ msg: "Failed to delete exercise." });
