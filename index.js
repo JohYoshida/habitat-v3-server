@@ -35,10 +35,11 @@ app.post("/exercise", (req, res) => {
   const { name } = req.body;
   // Check for existing exercise
   knex("exercises")
+    .first()
     .where({ name })
     .then(exercise => {
       if (exercise) {
-        res.send({ msg: "An exercise with that name already exists"});
+        res.send({ msg: "An exercise with that name already exists", exercise });
       } else {
         // Add to database
         const id = uuid()
