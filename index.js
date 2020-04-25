@@ -3,7 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const moment = require("moment");
-const { v1: uuid } = require('uuid');
+const { v1: uuid } = require("uuid");
 const PORT = process.env.PORT || 4000;
 const app = express();
 
@@ -26,7 +26,7 @@ app.get("/exercises", (req, res) => {
       res.send({ msg: "Get exercises", data: exercises });
     })
     .catch(err => {
-      res.send({ msg: "Failed to get exercises."});
+      res.send({ msg: "Failed to get exercises." });
       console.log("Error!", err);
     });
 });
@@ -39,24 +39,27 @@ app.post("/exercise", (req, res) => {
     .where({ name })
     .then(exercise => {
       if (exercise) {
-        res.send({ msg: "An exercise with that name already exists", exercise });
+        res.send({
+          msg: "An exercise with that name already exists",
+          exercise
+        });
       } else {
         // Add to database
-        const id = uuid()
+        const id = uuid();
         knex("exercises")
           .insert({ id, name })
           .then(() => {
             res.send({ msg: "Registered exercise", name, id });
           })
           .catch(err => {
-            res.send({ msg: "Failed to register exercise."});
+            res.send({ msg: "Failed to register exercise." });
             console.log("Error!", err);
           });
       }
     })
     // TODO: verify what this catch does
     .catch(err => {
-      res.send({ msg: "Failed duplicate exercise check."});
+      res.send({ msg: "Failed duplicate exercise check." });
       console.log("Error!", err);
     });
 });
@@ -69,7 +72,7 @@ app.delete("/exercise", (req, res) => {
       res.send({ msg: "Deleted exercise", name, id });
     })
     .catch(err => {
-      res.send({ msg: "Failed to delete exercise."});
+      res.send({ msg: "Failed to delete exercise." });
       console.log("Error!", err);
     });
 });
@@ -78,12 +81,12 @@ app.get("/workouts", (req, res) => {
   const { id, exercise_id, reps, sets } = req.body;
   // Get workouts
   knex("workouts")
-  .where({ exercise_id })
+    .where({ exercise_id })
     .then(workouts => {
       res.send({ msg: "Get workouts", data: workouts });
     })
     .catch(err => {
-      res.send({ msg: "Failed to get workouts."});
+      res.send({ msg: "Failed to get workouts." });
       console.log("Error!", err);
     });
 });
@@ -92,12 +95,12 @@ app.post("/workout", (req, res) => {
   const { exercise_id, reps, sets } = req.body;
   const id = uuid();
   knex("workout")
-    .insert({ id, exercise_id, reps, sets})
+    .insert({ id, exercise_id, reps, sets })
     .then(() => {
       res.send({ msg: "Registered workout", id });
     })
     .catch(err => {
-      res.send({ msg: "Failed to register workout."});
+      res.send({ msg: "Failed to register workout." });
       console.log("Error!", err);
     });
 });
