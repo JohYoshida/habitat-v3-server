@@ -3,7 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const moment = require("moment");
-const uuid = require("uuid/v1");
+const { v1: uuid } = require('uuid');
 const PORT = process.env.PORT || 4000;
 const app = express();
 
