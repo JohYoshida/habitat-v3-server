@@ -19,6 +19,7 @@ app.get("/", (req, res) => {
   res.send("Habitat server");
 });
 
+// Send all exercises
 app.get("/exercises", (req, res) => {
   // Get exercises
   knex("exercises")
@@ -31,6 +32,7 @@ app.get("/exercises", (req, res) => {
     });
 });
 
+// Add an exercise to database
 app.post("/exercise", (req, res) => {
   const { name } = req.body;
   // Check for existing exercise
@@ -64,6 +66,7 @@ app.post("/exercise", (req, res) => {
     });
 });
 
+// Delete an exercise by id
 app.delete("/exercise", (req, res) => {
   const { id, name } = req.body;
   knex("exercises")
@@ -93,6 +96,7 @@ app.delete("/exercise", (req, res) => {
     });
 });
 
+// Get all workouts associated with an exercise by exercise_id
 app.get("/workouts/:exercise_id", (req, res) => {
   const { exercise_id } = req.params;
   // Get workouts
@@ -107,6 +111,7 @@ app.get("/workouts/:exercise_id", (req, res) => {
     });
 });
 
+// Add an exercise to database
 app.post("/workout", (req, res) => {
   const { exercise_id, reps, sets } = req.body;
   const id = uuid();
