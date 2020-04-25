@@ -32,7 +32,7 @@ app.get("/exercises", (req, res) => {
 });
 
 app.post("/exercise", (req, res) => {
-  const { id, name } = req.body;
+  const { name } = req.body;
   // Check for existing exercise
   knex("exercises")
     .where({ name })
@@ -41,6 +41,7 @@ app.post("/exercise", (req, res) => {
         res.send({ msg: "An exercise with that name already exists"});
       } else {
         // Add to database
+        const id = uuid()
         knex("exercises")
           .insert({ id, name })
           .then(() => {
@@ -74,7 +75,8 @@ app.get("/workouts", (req, res) => {
 });
 
 app.post("/workout", (req, res) => {
-  const { id, exercise_id, reps, sets } = req.body;
+  const { exercise_id, reps, sets } = req.body;
+  const id = uuid();
   knex("workout")
     .insert({ id, exercise_id, reps, sets})
     .then(() => {
