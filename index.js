@@ -122,5 +122,20 @@ app.post("/workout", (req, res) => {
     });
 });
 
+// Delete an exercise by id
+app.delete("/workout", (req, res) => {
+  const { id } = req.body;
+  knex("workouts")
+    .where({ id })
+    .del()
+    .then(() => {
+      res.send({ msg: "Deleted workout", id });
+    })
+    .catch(err => {
+      res.send({ msg: "Failed to delete exercise." });
+      console.log("Error!", err);
+    });
+})
+
 // Start server
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
