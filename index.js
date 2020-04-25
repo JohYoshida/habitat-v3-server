@@ -19,6 +19,72 @@ app.get("/", (req, res) => {
   res.send("Habitat server");
 });
 
+app.get("/exercises", (req, res) => {
+  // Get exercises
+  knex("exercises")
+    .then(exercises => {
+      res.send({ msg: "Get exercises", data: exercises });
+    })
+    .catch(err => {
+      res.send({ msg: "Failed to get exercises."});
+      console.log("Error!", err);
+    });
+});
+
+app.post("/exercise", (req, res) => {
+  const { id, name } = req.body;
+  // Check for existing exercise
+  knex("exercises")
+    .where({ name })
+    .then(exercise => {
+      if (exercise) {
+        res.send({ msg: "An exercise with that name already exists"});
+      } else {
+        // Add to database
+        knex("exercises")
+          .insert({ id, name })
+          .then(() => {
+            res.send({ msg: "Registered exercise", name, id });
+          })
+          .catch(err => {
+            res.send({ msg: "Failed to register exercise."});
+            console.log("Error!", err);
+          });
+      }
+    })
+    // TODO: verify what this catch does
+    .catch(err => {
+      res.send({ msg: "Failed duplicate exercise check."});
+      console.log("Error!", err);
+    });
+});
+
+app.get("/workouts", (req, res) => {
+  const { id, exercise_id, reps, sets } = req.body;
+  // Get workouts
+  knex("workouts")
+  .where({ exercise_id })
+    .then(workouts => {
+      res.send({ msg: "Get workouts", data: workouts });
+    })
+    .catch(err => {
+      res.send({ msg: "Failed to get workouts."});
+      console.log("Error!", err);
+    });
+});
+
+app.post("/workout", (req, res) => {
+  const { id, exercise_id, reps, sets } = req.body;
+  knex("workout")
+    .insert({ id, exercise_id, reps, sets})
+    .then(() => {
+      res.send({ msg: "Registered workout", id });
+    })
+    .catch(err => {
+      res.send({ msg: "Failed to register workout."});
+      console.log("Error!", err);
+    });
+});
 
 // Start server
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
