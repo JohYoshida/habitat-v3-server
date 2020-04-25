@@ -78,8 +78,8 @@ app.delete("/exercise", (req, res) => {
     });
 });
 
-app.get("/workouts", (req, res) => {
-  const { id, exercise_id, reps, sets } = req.body;
+app.get("/workouts/:exercise_id", (req, res) => {
+  const { exercise_id } = req.params;
   // Get workouts
   knex("workouts")
     .where({ exercise_id })
