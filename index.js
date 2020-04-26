@@ -113,11 +113,11 @@ app.get("/workouts/:exercise_id", (req, res) => {
 
 // Add an exercise to database
 app.post("/workout", (req, res) => {
-  const { exercise_id, reps, sets } = req.body;
+  const { exercise_id, reps, sets, seconds } = req.body;
   const id = uuid();
   const createdAt = moment().format();
   knex("workouts")
-    .insert({ id, exercise_id, reps, sets, createdAt })
+    .insert({ id, exercise_id, reps, sets, seconds, createdAt })
     .then(() => {
       res.send({ msg: "Registered workout", id });
     })
