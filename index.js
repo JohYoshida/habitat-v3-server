@@ -112,7 +112,7 @@ app.get("/workouts/:exercise_id", (req, res) => {
     });
 });
 
-// Add an exercise to database
+// Add a workout to database
 app.post("/workout", (req, res) => {
   const { exercise_id, reps, sets, seconds } = req.body;
   const id = uuid();
@@ -120,7 +120,32 @@ app.post("/workout", (req, res) => {
   knex("workouts")
     .insert({ id, exercise_id, reps, sets, seconds, createdAt })
     .then(() => {
-      res.send({ msg: "Registered workout", id });
+      knex("exercises")
+        .first()
+        .where({ id: exercise_id })
+        .then(exercise => {
+          knex("exercises")
+            .first()
+            .where({ id: exercise_id })
+            .update({ lifetimeTotal: exercise.lifetimeTotal + seconds })
+            .then(() => {
+              res.send({ msg: "Registered workout", id });
+            })
+            .catch(err => {
+              res.send({
+                msg:
+                  "Failed to update workout's associated exercise lifetimeTotal."
+              });
+              console.log("Error!", err);
+            });
+        })
+        .catch(err => {
+          res.send({
+            msg:
+              "Failed to update workout's associated exercise lifetimeTotal: Exercise does not exist."
+          });
+          console.log("Error!", err);
+        });
     })
     .catch(err => {
       res.send({ msg: "Failed to register workout." });
@@ -130,18 +155,43 @@ app.post("/workout", (req, res) => {
 
 // Delete an exercise by id
 app.delete("/workout", (req, res) => {
-  const { id } = req.body;
+  const { id, exercise_id } = req.body;
   knex("workouts")
     .where({ id })
     .del()
     .then(() => {
-      res.send({ msg: "Deleted workout", id });
+      knex("exercises")
+        .first()
+        .where({ id: exercise_id })
+        .then(exercise => {
+          knex("exercises")
+            .first()
+            .where({ id: exercise_id })
+            .update({ lifetimeTotal: exercise.lifetimeTotal - seconds })
+            .then(() => {
+              res.send({ msg: "Deleted workout", id });
+            })
+            .catch(err => {
+              res.send({
+                msg:
+                  "Failed to update workout's associated exercise lifetimeTotal."
+              });
+              console.log("Error!", err);
+            });
+        })
+        .catch(err => {
+          res.send({
+            msg:
+              "Failed to update workout's associated exercise lifetimeTotal: Exercise does not exist."
+          });
+          console.log("Error!", err);
+        });
     })
     .catch(err => {
       res.send({ msg: "Failed to delete exercise." });
       console.log("Error!", err);
     });
-})
+});
 
 // Start server
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
