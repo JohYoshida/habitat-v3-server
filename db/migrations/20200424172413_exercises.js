@@ -6,7 +6,7 @@ exports.up = function(knex) {
       table.uuid("id").primary();
       table.string("name");
       table.string("mode");
-      table.string("lifetimeTotal");
+      table.integer("lifetimeTotal");
     }),
   ]);
 };
