@@ -77,8 +77,7 @@ app.post("/exercises", (req, res) => {
         console.log({ msg: "Registered exercise", name, id });
       })
       .catch(err => {
-        res.send({ msg: "Failed to register exercise." });
-        console.log("Error!", err);
+        console.log("Error! Failed to register exercise.", err);
       });
   })
   res.send({ msg: "Registered all exercises."});
@@ -192,8 +191,7 @@ app.post("/workouts", (req, res) => {
         console.log({ msg: "Registered workout", id });
       })
       .catch(err => {
-        res.send({ msg: "Failed to register workout." });
-        console.log("Error!", err);
+        console.log("Error! Failed to register workout.", err);
       });
   })
   res.send({ msg: "Registered all workouts."});
