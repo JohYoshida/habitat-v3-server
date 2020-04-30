@@ -124,72 +124,85 @@ app.post("/workout", (req, res) => {
         .first()
         .where({ id: exercise_id })
         .then(exercise => {
+          let amount;
+          if (exercise.mode === "reps and sets") {
+            amount = reps * sets;
+          } else if (exercise.mode === "time") {
+            amount = seconds;
+          }
           knex("exercises")
             .first()
             .where({ id: exercise_id })
-            .update({ lifetimeTotal: exercise.lifetimeTotal + seconds })
+            .update({
+              lifetimeTotal: exercise.lifetimeTotal + amount
+            })
             .then(() => {
               res.send({ msg: "Registered workout", id });
             })
             .catch(err => {
+              let msg =
+                "Failed to update workout's associated exercise lifetimeTotal.";
               res.send({
-                msg:
-                  "Failed to update workout's associated exercise lifetimeTotal."
+                msg
               });
-              console.log("Error!", err);
+              console.log("Error!", msg, id, exercise_id, err);
             });
         })
         .catch(err => {
+          let msg = "Failed to get exercise.";
           res.send({
-            msg:
-              "Failed to update workout's associated exercise lifetimeTotal: Exercise does not exist."
+            msg
           });
-          console.log("Error!", err);
+          console.log("Error!", msg, exercise_id, err);
         });
     })
     .catch(err => {
-      res.send({ msg: "Failed to register workout." });
-      console.log("Error!", err);
+      let msg = "Failed to register workout.";
+      res.send({ msg });
+      console.log("Error!", msg, id, err);
     });
 });
 
-// Delete an exercise by id
+// Delete a workout by id and decrease its associated exercise's lifetimeTotal
 app.delete("/workout", (req, res) => {
-  const { id, exercise_id } = req.body;
-  knex("workouts")
-    .where({ id })
-    .del()
-    .then(() => {
+  const { id, exercise_id, amount } = req.body;
+  // Get the exercise for its current lifetimeTotal
+  knex("exercises")
+    .first()
+    .where({ id: exercise_id })
+    .then(exercise => {
+      // Set the new lifetimeTotal
       knex("exercises")
         .first()
         .where({ id: exercise_id })
-        .then(exercise => {
-          knex("exercises")
+        .update({
+          lifetimeTotal: exercise.lifetimeTotal - amount
+        })
+        .then(() => {
+          // Delete the workout
+          knex("workouts")
             .first()
-            .where({ id: exercise_id })
-            .update({ lifetimeTotal: exercise.lifetimeTotal - seconds })
+            .where({ id })
+            .del()
             .then(() => {
               res.send({ msg: "Deleted workout", id });
             })
             .catch(err => {
-              res.send({
-                msg:
-                  "Failed to update workout's associated exercise lifetimeTotal."
-              });
-              console.log("Error!", err);
+              let msg = "Failed to delete workout.";
+              res.send({ msg });
+              console.log("Error!", msg, id, err);
             });
         })
         .catch(err => {
-          res.send({
-            msg:
-              "Failed to update workout's associated exercise lifetimeTotal: Exercise does not exist."
-          });
-          console.log("Error!", err);
+          let msg = "Failed to decrease exercise's lifetimeTotal.";
+          res.send({ msg });
+          console.log("Error!", msg, exercise_id, err);
         });
     })
     .catch(err => {
-      res.send({ msg: "Failed to delete exercise." });
-      console.log("Error!", err);
+      let msg = "Failed to retrieve exercise.";
+      res.send({ msg });
+      console.log("Error!", msg, exercise_id, err);
     });
 });
 
