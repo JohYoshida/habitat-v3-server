@@ -23,6 +23,7 @@ app.get("/", (req, res) => {
 app.get("/exercises", (req, res) => {
   // Get exercises
   knex("exercises")
+  .orderBy("name")
     .then(exercises => {
       res.send({ msg: "Get exercises", data: exercises });
     })
