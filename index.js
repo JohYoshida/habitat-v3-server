@@ -66,6 +66,24 @@ app.post("/exercise", (req, res) => {
     });
 });
 
+// Add a list of exercises to database
+app.post("/exercises", (req, res) => {
+  const { list } = req.body;
+  list.forEach(exercise => {
+    let { id, name, mode, lifetimeTotal } = exercise;
+    knex("exercises")
+      .insert({ id, name, mode, lifetimeTotal })
+      .then(() => {
+        console.log({ msg: "Registered exercise", name, id });
+      })
+      .catch(err => {
+        res.send({ msg: "Failed to register exercise." });
+        console.log("Error!", err);
+      });
+  })
+  res.send({ msg: "Registered all exercises."});
+})
+
 // Delete an exercise by id
 app.delete("/exercise", (req, res) => {
   const { id, name } = req.body;
@@ -161,6 +179,24 @@ app.post("/workout", (req, res) => {
       res.send({ msg });
       console.log("Error!", msg, id, err);
     });
+});
+
+// Add a list of workouts to database
+app.post("/workouts", (req, res) => {
+  const { list } = req.body;
+  list.forEach(workout => {
+    const { id, exercise_id, reps, sets, seconds, createdAt } = workout;
+    knex("workouts")
+      .insert({ id, exercise_id, reps, sets, seconds, createdAt })
+      .then(() => {
+        console.log({ msg: "Registered workout", id });
+      })
+      .catch(err => {
+        res.send({ msg: "Failed to register workout." });
+        console.log("Error!", err);
+      });
+  })
+  res.send({ msg: "Registered all workouts."});
 });
 
 // Delete a workout by id and decrease its associated exercise's lifetimeTotal
