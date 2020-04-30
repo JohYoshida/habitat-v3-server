@@ -147,6 +147,9 @@ app.post("/workout", (req, res) => {
           } else if (exercise.mode === "time") {
             amount = seconds;
           }
+          console.log("amount", typeof(amount), amount);
+          console.log("lifetimeTotal", typeof(exercise.lifetimeTotal), exercise.lifetimeTotal);
+          console.log(exercise.lifetimeTotal + amount);
           knex("exercises")
             .first()
             .where({ id: exercise_id })
