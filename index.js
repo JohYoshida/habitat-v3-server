@@ -19,7 +19,7 @@ app.get("/", (req, res) => {
   res.send("Habitat server");
 });
 
-// Send all exercises
+// Get all exercises
 app.get("/exercises", (req, res) => {
   // Get exercises
   knex("exercises")
@@ -29,6 +29,22 @@ app.get("/exercises", (req, res) => {
     })
     .catch(err => {
       res.send({ msg: "Failed to get exercises." });
+      console.log("Error!", err);
+    });
+});
+
+// Get a particular exercise by id
+app.get("/exercise/:id", (req, res) => {
+  const { id } = req.params;
+  // Get exercises
+  knex("exercises")
+    .first()
+    .where({ id })
+    .then(exercise => {
+      res.send({ msg: "Get exercise", data: exercise });
+    })
+    .catch(err => {
+      res.send({ msg: "Failed to get exercise.", id });
       console.log("Error!", err);
     });
 });
