@@ -136,7 +136,7 @@ app.get("/workouts/:exercise_id", (req, res) => {
   // Get workouts
   knex("workouts")
     .where({ exercise_id })
-    .orderBy("createdAt", "desc")
+    .orderBy("createdAt", "asc")
     .then(workouts => {
       res.send({ msg: "Get workouts", data: workouts });
     })
