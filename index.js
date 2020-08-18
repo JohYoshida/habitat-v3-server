@@ -51,7 +51,7 @@ app.get("/exercise/:id", (req, res) => {
 
 // Add an exercise to database
 app.post("/exercise", (req, res) => {
-  const {name, mode} = req.body;
+  const {name, mode, dailyGoal} = req.body;
   // Check for existing exercise
   knex("exercises")
     .first()
@@ -66,7 +66,7 @@ app.post("/exercise", (req, res) => {
         // Add to database
         const id = uuid();
         knex("exercises")
-          .insert({id, name, mode, lifetimeTotal: 0})
+          .insert({id, name, mode, dailyGoal, lifetimeTotal: 0})
           .then(() => {
             res.send({msg: "Registered exercise", name, id});
           })
