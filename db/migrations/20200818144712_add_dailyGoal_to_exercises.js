@@ -1,11 +1,15 @@
 exports.up = function(knex) {
-  knex.schema.table("exercises", table => {
-    table.integer("dailyGoal");
-  });
+  return Promise.all([
+    knex.schema.table("exercises", table => {
+      table.integer("dailyGoal");
+    })
+  ]);
 };
 
 exports.down = function(knex) {
-  knex.schema.table("exercises", table => {
-    table.dropColumn("dailyGoal");
-  });
+  return Promise.all([
+    knex.schema.table("exercises", table => {
+      table.dropColumn("dailyGoal");
+    })
+  ]);
 };
