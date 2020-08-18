@@ -83,6 +83,22 @@ app.post("/exercise", (req, res) => {
     });
 });
 
+// Update an exercise by id
+app.post("/exercise/:id", (req, res) => {
+  const {name, mode} = req.body;
+  knex("exercises")
+    .first()
+    .where({id})
+    .update({name, mode, dailyGoal, lifetimeTotal})
+    .then(() => {
+      res.send({msg: "Updated exercise", name, id});
+    })
+    .catch(err => {
+      res.send({msg: "Failed to update exercise."});
+      console.log("Error!", err);
+    });
+});
+
 // Add a list of exercises to database
 app.post("/exercises", (req, res) => {
   const {list} = req.body;
