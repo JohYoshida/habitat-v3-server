@@ -85,7 +85,8 @@ app.post("/exercise", (req, res) => {
 
 // Update an exercise by id
 app.post("/exercise/:id", (req, res) => {
-  const {name, mode} = req.body;
+  const {id} = req.params;
+  const {name, mode, dailyGoal, lifetimeTotal} = req.body;
   knex("exercises")
     .first()
     .where({id})
