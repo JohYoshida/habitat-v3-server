@@ -282,6 +282,7 @@ app.get("/backup", (req, res) => {
       knex("workouts")
         .orderBy("createdAt", "asc")
         .then(workouts => {
+          console.log("test");
           res.send({msg: "Get backup", data: {exercises, workouts}});
         })
         .catch(err => {
