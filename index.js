@@ -284,7 +284,8 @@ app.get("/backup", (req, res) => {
         .then(workouts => {
           res.send({
             msg: "Get backup",
-            data: {exercises: exercises, workouts: workouts}
+            exercises,
+            workouts
           });
         })
         .catch(err => {
