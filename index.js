@@ -104,9 +104,9 @@ app.post("/exercise/:id", (req, res) => {
 app.post("/exercises", (req, res) => {
   const {list} = req.body;
   list.forEach(exercise => {
-    let {id, name, mode, lifetimeTotal} = exercise;
+    let {id, name, mode, dailyGoal, lifetimeTotal} = exercise;
     knex("exercises")
-      .insert({id, name, mode, lifetimeTotal})
+      .insert({id, name, mode, dailyGoal, ifetimeTotal})
       .then(() => {
         console.log({msg: "Registered exercise", name, id});
       })
