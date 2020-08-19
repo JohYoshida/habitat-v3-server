@@ -274,5 +274,26 @@ app.delete("/workout", (req, res) => {
     });
 });
 
+// Get everything in the database for backup
+app.get("/backup", (req, res) => {
+  knex("exercises")
+    .orderBy("name")
+    .then(exercises => {
+      knex("workouts")
+        .orderBy("createdAt", "asc")
+        .then(workouts => {
+          res.send({msg: "Get backup", data: {exercise, workouts}});
+        })
+        .catch(err => {
+          res.send({msg: "Failed to make backup when getting workouts."});
+          console.log("Error!", err);
+        });
+    })
+    .catch(err => {
+      res.send({msg: "Failed to make backup when getting exercises."});
+      console.log("Error!", err);
+    });
+});
+
 // Start server
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
