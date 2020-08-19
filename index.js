@@ -282,7 +282,11 @@ app.get("/backup", (req, res) => {
       knex("workouts")
         .orderBy("createdAt", "asc")
         .then(workouts => {
+<<<<<<< HEAD
           res.send({msg: "Get backup", data: {exercises, workouts}});
+=======
+          res.send({msg: "Get backup", data: {exercise, workouts}});
+>>>>>>> 6c64a0993aa414832ca9608feb719ae16960e5dd
         })
         .catch(err => {
           res.send({msg: "Failed to make backup when getting workouts."});
