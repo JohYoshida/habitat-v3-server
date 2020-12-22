@@ -274,6 +274,31 @@ app.delete("/workout", (req, res) => {
     });
 });
 
+// Get all goals from the database
+app.get("/goals", (req, res) => {
+  res.send({msg: "Goal"});
+});
+
+// Add a goal to the database
+app.post("/goal", (req, res) => {
+  res.send({msg: "Goal"});
+});
+
+// Add a list of goals to the database
+app.post("/goals", (req, res) => {
+  res.send({msg: "Goal"});
+});
+
+// Add a goal to the database
+app.delete("/goal", (req, res) => {
+  res.send({msg: "Goal"});
+});
+
+// Update a goal by id
+app.post("/goal/:id", (req, res) => {
+  res.send({msg: "Goal"});
+});
+
 // Get everything in the database for backup
 app.get("/backup", (req, res) => {
   knex("exercises")
