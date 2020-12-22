@@ -282,8 +282,9 @@ app.get("/backup", (req, res) => {
       knex("workouts")
         .orderBy("createdAt", "asc")
         .then(workouts => {
+          const time = moment();
           res.send({
-            msg: "Get backup",
+            msg: "Backup: " + time,
             exercises,
             workouts
           });
