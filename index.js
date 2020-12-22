@@ -300,5 +300,12 @@ app.get("/backup", (req, res) => {
     });
 });
 
+// TODO: Complete this method
+app.post("/backup", (req, res) => {
+  const {msg, exercises, workouts} = req.body;
+  // Going to need a bunch of promises here to make this work
+  res.send({msg: "This route isn't functional yet, check back later"});
+});
+
 // Start server
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
