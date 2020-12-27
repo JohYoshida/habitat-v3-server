@@ -288,9 +288,32 @@ app.get("/goals", (req, res) => {
     });
 });
 
-// Add a goal to the database
+// Add or edit a goal
 app.post("/goal", (req, res) => {
-  res.send({msg: "Goal"});
+  const {exercise_id, type, value, complete} = req.body;
+  knex("goals")
+    .first()
+    .where({exercise_id, type})
+    .update({value, complete})
+    .then(goal => {
+      console.log("Updated goal");
+      res.send({msg: "Updated goal", goal});
+    })
+    .catch(err => {
+      console.log("No goal to update, registering goal...", err);
+      const id = uuid();
+      const createdAt = moment().format();
+      knex("goals")
+        .insert({id, exercise_id, type, value, complete, createdAt})
+        .then(goal => {
+          console.log("Registered goal");
+          res.send({msg: "Registered goal", goal});
+        })
+        .catch(err => {
+          console.log("Couldn't register goal", err);
+          res.send({msg: "Couldn't register goal", err});
+        });
+    });
 });
 
 // Add a list of goals to the database
