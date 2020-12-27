@@ -290,11 +290,11 @@ app.get("/goals", (req, res) => {
 
 // Add or edit a goal
 app.post("/goal", (req, res) => {
-  const {exercise_id, type, value, complete} = req.body;
+  const {exercise_id, type, value} = req.body;
   knex("goals")
     .first()
     .where({exercise_id, type})
-    .update({value, complete})
+    .update({value})
     .then(goal => {
       console.log("Updated goal");
       res.send({msg: "Updated goal", goal});
@@ -304,13 +304,13 @@ app.post("/goal", (req, res) => {
       const id = uuid();
       const createdAt = moment().format();
       knex("goals")
-        .insert({id, exercise_id, type, value, complete, createdAt})
+        .insert({id, exercise_id, type, value, createdAt})
         .then(goal => {
           console.log("Registered goal");
           res.send({msg: "Registered goal", goal});
         })
         .catch(err => {
-          console.log("Couldn't register goal", err);
+          console.log("Couldn't register goal. Check request body", err);
           res.send({msg: "Couldn't register goal", err});
         });
     });
