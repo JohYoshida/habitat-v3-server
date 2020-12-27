@@ -5,7 +5,7 @@ exports.up = function(knex) {
       table.uuid("id").primary();
       table.uuid("exercise_id");
       table.string("type"); // daily, weekly, monthly, yearly
-      table.integer("goal");
+      table.integer("value");
       table.boolean("complete");
       table.string("createdAt");
     })
