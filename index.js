@@ -276,7 +276,16 @@ app.delete("/workout", (req, res) => {
 
 // Get all goals from the database
 app.get("/goals", (req, res) => {
-  res.send({msg: "Goal"});
+  // Get goals
+  knex("goals")
+    .orderBy("type")
+    .then(goals => {
+      res.send({msg: "Get goals", goals});
+    })
+    .catch(err => {
+      res.send({msg: "Failed to get goals."});
+      console.log("Error!", err);
+    });
 });
 
 // Add a goal to the database
