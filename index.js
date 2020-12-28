@@ -11,6 +11,11 @@ const app = express();
 const dbconfig = require("./knexfile.js")[process.env.DB_ENV];
 const knex = require("knex")(dbconfig);
 
+// Route requirements
+var exercises = require("./routes/exercises");
+var workouts = require("./routes/workouts");
+var goals = require("./routes/goals");
+
 // parse application/json
 app.use(bodyParser.json());
 
@@ -275,78 +280,17 @@ app.delete("/workout", (req, res) => {
 });
 
 // Get all goals from the database
-app.get("/goals", (req, res) => {
-  // Get goals
-  knex("goals")
-    .orderBy("type")
-    .then(goals => {
-      res.send({msg: "Get goals", goals});
-    })
-    .catch(err => {
-      res.send({msg: "Failed to get goals."});
-      console.log("Error!", err);
-    });
-});
+app.get("/goals", goals.getAll);
 
 // Add or edit a goal
-app.post("/goal", (req, res) => {
-  const {exercise_id, type, value} = req.body;
-  knex("goals")
-    .first()
-    .where({exercise_id, type})
-    .then(goal => {
-      console.log("Goal found:", goal);
-      knex("goals")
-        .first()
-        .where({id: goal.id})
-        .update({value})
-        .then(() => {
-          console.log("Updated goal");
-          goal.value = value; // so the return object reflects the update
-          res.send({msg: "Updated goal", goal});
-        })
-        .catch(err => {
-          console.log("Couldn't update goal. Check request body", err);
-          res.send({msg: "Couldn't update goal", err});
-        });
-    })
-    .catch(() => {
-      // Add goal
-      console.log("Adding goal...");
-      const id = uuid();
-      const createdAt = moment().format();
-      knex("goals")
-        .insert({id, exercise_id, type, value, createdAt})
-        .then(() => {
-          console.log("Registered goal");
-          res.send({msg: "Registered goal"});
-        })
-        .catch(err => {
-          console.log("Couldn't register goal. Check request body", err);
-          res.send({msg: "Couldn't register goal", err});
-        });
-    });
-});
+app.post("/goal", goals.post);
 
 // TODO: Complete this route
 // Add a list of goals to the database
-app.post("/goals", (req, res) => {
-  res.send({msg: "Goal"});
-});
+app.post("/goals", goals.postAll);
 
-// Delete a goal from the database
-app.delete("/goal/:id", (req, res) => {
-  const {id} = req.params;
-  knex("goals")
-    .where({id})
-    .del()
-    .then(() => {
-      res.send({msg: "Deleted goal", id});
-    })
-    .catch(err => {
-      res.send({msg: "Error: could not delete goal", id, err});
-    });
-});
+// Delete a goal from the database by id
+app.delete("/goal/:id", goals.delete);
 
 // Get everything in the database for backup
 app.get("/backup", (req, res) => {
