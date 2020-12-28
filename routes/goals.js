@@ -9,7 +9,7 @@ exports.getAll = (req, res) => {
   knex("goals")
     .orderBy("type")
     .then(goals => {
-      res.send({msg: "Get goals", goals});
+      res.send({msg: "Get goals", data: goals});
     })
     .catch(err => {
       res.send({msg: "Failed to get goals."});
@@ -17,13 +17,14 @@ exports.getAll = (req, res) => {
     });
 };
 
+// Get all goals for an exercise by exercise_id
 exports.getByExercise = (req, res) => {
   const {exercise_id} = req.params;
   knex("goals")
     .where({exercise_id})
     .orderBy("type")
     .then(goals => {
-      res.send({msg: "Get goals", goals});
+      res.send({msg: "Get goals", data: goals});
     })
     .catch(err => {
       res.send({msg: "Failed to get goals."});
