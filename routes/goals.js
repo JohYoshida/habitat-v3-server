@@ -1,4 +1,5 @@
-// Database requirements
+// Requirements
+const {v1: uuid} = require("uuid");
 const dbconfig = require("../knexfile.js")[process.env.DB_ENV];
 const knex = require("knex")(dbconfig);
 
