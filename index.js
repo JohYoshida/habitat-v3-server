@@ -310,13 +310,13 @@ app.post("/goal", (req, res) => {
         });
     })
     .catch(() => {
-      // res.send({msg: "Error: could not post goal", err});
       // Add goal
       console.log("Adding goal...");
       const id = uuid();
       const createdAt = moment().format();
       knex("goals")
         .insert({id, exercise_id, type, value, createdAt})
+        .where({id})
         .then(goal => {
           console.log("Registered goal");
           res.send({msg: "Registered goal", goal});
