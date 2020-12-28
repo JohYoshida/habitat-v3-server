@@ -12,7 +12,7 @@ const dbconfig = require("./knexfile.js")[process.env.DB_ENV];
 const knex = require("knex")(dbconfig);
 
 // Route requirements
-// var exercises = require("./routes/exercises");
+var exercises = require("./routes/exercises");
 // var workouts = require("./routes/workouts");
 var goals = require("./routes/goals");
 
@@ -25,132 +25,22 @@ app.get("/", (req, res) => {
 });
 
 // Get all exercises
-app.get("/exercises", (req, res) => {
-  // Get exercises
-  knex("exercises")
-    .orderBy("name")
-    .then(exercises => {
-      res.send({msg: "Get exercises", data: exercises});
-    })
-    .catch(err => {
-      res.send({msg: "Failed to get exercises."});
-      console.log("Error!", err);
-    });
-});
+app.get("/exercises", exercises.getAll);
 
 // Get a particular exercise by id
-app.get("/exercise/:id", (req, res) => {
-  const {id} = req.params;
-  // Get exercises
-  knex("exercises")
-    .first()
-    .where({id})
-    .then(exercise => {
-      res.send({msg: "Get exercise", data: exercise});
-    })
-    .catch(err => {
-      res.send({msg: "Failed to get exercise.", id});
-      console.log("Error!", err);
-    });
-});
+app.get("/exercise/:id", exercises.getByID);
 
 // Add an exercise to database
-app.post("/exercise", (req, res) => {
-  const {name, mode, dailyGoal} = req.body;
-  // Check for existing exercise
-  knex("exercises")
-    .first()
-    .where({name})
-    .then(exercise => {
-      if (exercise) {
-        res.send({
-          msg: "An exercise with that name already exists",
-          exercise
-        });
-      } else {
-        // Add to database
-        const id = uuid();
-        knex("exercises")
-          .insert({id, name, mode, dailyGoal, lifetimeTotal: 0})
-          .then(() => {
-            res.send({msg: "Registered exercise", name, id});
-          })
-          .catch(err => {
-            res.send({msg: "Failed to register exercise."});
-            console.log("Error!", err);
-          });
-      }
-    })
-    // TODO: verify what this catch does
-    .catch(err => {
-      res.send({msg: "Failed duplicate exercise check."});
-      console.log("Error!", err);
-    });
-});
+app.post("/exercise", exercises.post);
 
 // Update an exercise by id
-app.post("/exercise/:id", (req, res) => {
-  const {id} = req.params;
-  const {name, mode, dailyGoal, lifetimeTotal} = req.body;
-  knex("exercises")
-    .first()
-    .where({id})
-    .update({name, mode, dailyGoal, lifetimeTotal})
-    .then(() => {
-      res.send({msg: "Updated exercise", name, id});
-    })
-    .catch(err => {
-      res.send({msg: "Failed to update exercise."});
-      console.log("Error!", err);
-    });
-});
+app.post("/exercise/:id", exercises.update);
 
 // Add a list of exercises to database
-app.post("/exercises", (req, res) => {
-  const {list} = req.body;
-  list.forEach(exercise => {
-    let {id, name, mode, dailyGoal, lifetimeTotal} = exercise;
-    knex("exercises")
-      .insert({id, name, mode, dailyGoal, lifetimeTotal})
-      .then(() => {
-        console.log({msg: "Registered exercise", name, id});
-      })
-      .catch(err => {
-        console.log("Error! Failed to register exercise.", err);
-      });
-  });
-  res.send({msg: "Registered all exercises."});
-});
+app.post("/exercises", exercises.postAll);
 
 // Delete an exercise by id
-app.delete("/exercise", (req, res) => {
-  const {id, name} = req.body;
-  knex("exercises")
-    .where({id})
-    .del()
-    .then(() => {
-      knex("workouts")
-        .where({exercise_id: id})
-        .del()
-        .then(() => {
-          res.send({
-            msg: "Deleted exercise and associated workouts",
-            name,
-            id
-          });
-        })
-        .catch(err => {
-          res.send({
-            msg: "Failed to delete workouts associated with exercise."
-          });
-          console.log("Error!", err);
-        });
-    })
-    .catch(err => {
-      res.send({msg: "Failed to delete exercise."});
-      console.log("Error!", err);
-    });
-});
+app.delete("/exercise", exercises.delete);
 
 // Get all workouts associated with an exercise by exercise_id
 app.get("/workouts/:exercise_id", (req, res) => {
