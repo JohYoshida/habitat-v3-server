@@ -347,11 +347,6 @@ app.delete("/goal/:id", (req, res) => {
     });
 });
 
-// Update a goal by id
-app.post("/goal/:id", (req, res) => {
-  res.send({msg: "Goal"});
-});
-
 // Get everything in the database for backup
 app.get("/backup", (req, res) => {
   knex("exercises")
