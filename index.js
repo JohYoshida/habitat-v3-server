@@ -333,9 +333,18 @@ app.post("/goals", (req, res) => {
   res.send({msg: "Goal"});
 });
 
-// Add a goal to the database
-app.delete("/goal", (req, res) => {
-  res.send({msg: "Goal"});
+// Delete a goal from the database
+app.delete("/goal/:id", (req, res) => {
+  const {id} = req.params;
+  knex("goals")
+    .where({id})
+    .del()
+    .then(() => {
+      res.send({msg: "Deleted goal", id});
+    })
+    .catch(err => {
+      res.send({msg: "Error: could not delete goal", id, err});
+    });
 });
 
 // Update a goal by id
