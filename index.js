@@ -302,6 +302,7 @@ app.post("/goal", (req, res) => {
         .update({value})
         .then(() => {
           console.log("Updated goal");
+          goal.value = value; // so the return object reflects the update
           res.send({msg: "Updated goal", goal});
         })
         .catch(err => {
@@ -316,10 +317,9 @@ app.post("/goal", (req, res) => {
       const createdAt = moment().format();
       knex("goals")
         .insert({id, exercise_id, type, value, createdAt})
-        .where({id})
-        .then(goal => {
+        .then(() => {
           console.log("Registered goal");
-          res.send({msg: "Registered goal", goal});
+          res.send({msg: "Registered goal"});
         })
         .catch(err => {
           console.log("Couldn't register goal. Check request body", err);
