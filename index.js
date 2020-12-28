@@ -307,7 +307,8 @@ app.get("/backup", (req, res) => {
               res.send({
                 msg: "Backup: " + time,
                 exercises,
-                workouts
+                workouts,
+                goals
               });
             })
             .catch(err => {
