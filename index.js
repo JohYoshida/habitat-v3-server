@@ -300,7 +300,7 @@ app.post("/goal", (req, res) => {
         .first()
         .where({id: goal.id})
         .update({value})
-        .then(goal => {
+        .then(() => {
           console.log("Updated goal");
           res.send({msg: "Updated goal", goal});
         })
