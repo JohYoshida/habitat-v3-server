@@ -294,25 +294,44 @@ app.post("/goal", (req, res) => {
   knex("goals")
     .first()
     .where({exercise_id, type})
-    .update({value})
+    // .update({value})
     .then(goal => {
-      console.log("Updated goal");
+      if (!goal) {
+        // Add goal
+        console.log("Adding goal...", err);
+        const id = uuid();
+        const createdAt = moment().format();
+        knex("goals")
+          .insert({id, exercise_id, type, value, createdAt})
+          .then(goal => {
+            console.log("Registered goal");
+            res.send({msg: "Registered goal", goal});
+          })
+          .catch(err => {
+            console.log("Couldn't register goal. Check request body", err);
+            res.send({msg: "Couldn't register goal", err});
+          });
+      } else {
+        // Update goal
+        console.log("Goal found:", goal);
+        knex("goals")
+          .first()
+          .where({id: goal.id})
+          .update({value})
+          .then(goal => {
+            console.log("Updated goal");
+            res.send({msg: "Updated goal", goal});
+          })
+          .catch(err => {
+            console.log("Couldn't update goal. Check request body", err);
+            res.send({msg: "Couldn't update goal", err});
+          });
+        // console.log("Updated goal");
+      }
       res.send({msg: "Updated goal", goal});
     })
     .catch(err => {
-      console.log("No goal to update, registering goal...", err);
-      const id = uuid();
-      const createdAt = moment().format();
-      knex("goals")
-        .insert({id, exercise_id, type, value, createdAt})
-        .then(goal => {
-          console.log("Registered goal");
-          res.send({msg: "Registered goal", goal});
-        })
-        .catch(err => {
-          console.log("Couldn't register goal. Check request body", err);
-          res.send({msg: "Couldn't register goal", err});
-        });
+      res.send("Error: could not post goal", err);
     });
 });
 
