@@ -328,6 +328,7 @@ app.post("/goal", (req, res) => {
     });
 });
 
+// TODO: Complete this route
 // Add a list of goals to the database
 app.post("/goals", (req, res) => {
   res.send({msg: "Goal"});
@@ -347,6 +348,7 @@ app.delete("/goal/:id", (req, res) => {
     });
 });
 
+// TODO: Update this method for goals
 // Get everything in the database for backup
 app.get("/backup", (req, res) => {
   knex("exercises")
