@@ -296,6 +296,7 @@ app.post("/goal", (req, res) => {
     .where({exercise_id, type})
     // .update({value})
     .then(goal => {
+      console.log("goal:", goal);
       if (!goal) {
         // Add goal
         console.log("Adding goal...", err);
@@ -330,7 +331,7 @@ app.post("/goal", (req, res) => {
       }
     })
     .catch(err => {
-      res.send("Error: could not post goal", err);
+      res.send({msg: "Error: could not post goal", err});
     });
 });
 
