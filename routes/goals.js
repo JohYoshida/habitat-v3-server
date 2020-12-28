@@ -22,7 +22,7 @@ exports.getByExercise = (req, res) => {
   const {exercise_id} = req.params;
   knex("goals")
     .where({exercise_id})
-    .orderBy("type")
+    .orderBy("value")
     .then(goals => {
       res.send({msg: "Get goals", data: goals});
     })
