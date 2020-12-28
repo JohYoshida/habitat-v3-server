@@ -12,8 +12,8 @@ const dbconfig = require("./knexfile.js")[process.env.DB_ENV];
 const knex = require("knex")(dbconfig);
 
 // Route requirements
-var exercises = require("./routes/exercises");
-var workouts = require("./routes/workouts");
+// var exercises = require("./routes/exercises");
+// var workouts = require("./routes/workouts");
 var goals = require("./routes/goals");
 
 // parse application/json
