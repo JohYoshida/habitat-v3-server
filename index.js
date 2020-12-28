@@ -348,7 +348,6 @@ app.delete("/goal/:id", (req, res) => {
     });
 });
 
-// TODO: Update this method for goals
 // Get everything in the database for backup
 app.get("/backup", (req, res) => {
   knex("exercises")
@@ -357,12 +356,20 @@ app.get("/backup", (req, res) => {
       knex("workouts")
         .orderBy("createdAt", "asc")
         .then(workouts => {
-          const time = moment();
-          res.send({
-            msg: "Backup: " + time,
-            exercises,
-            workouts
-          });
+          knex("goals")
+            .orderBy("type")
+            .then(goals => {
+              const time = moment();
+              res.send({
+                msg: "Backup: " + time,
+                exercises,
+                workouts
+              });
+            })
+            .catch(err => {
+              res.send({msg: "Failed to make backup when getting goals."});
+              console.log("Error!", err);
+            });
         })
         .catch(err => {
           res.send({msg: "Failed to make backup when getting workouts."});
