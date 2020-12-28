@@ -57,6 +57,9 @@ app.delete("/workout", workouts.delete);
 // Get all goals from the database
 app.get("/goals", goals.getAll);
 
+// Get all goals associated with an exercise
+app.get("/goals/:exercise_id", goals.getByExercise);
+
 // Add or edit a goal
 app.post("/goal", goals.post);
 

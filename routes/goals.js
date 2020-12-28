@@ -17,6 +17,20 @@ exports.getAll = (req, res) => {
     });
 };
 
+exports.getByExercise = (req, res) => {
+  const {exercise_id} = req.params;
+  knex("goals")
+    .where({exercise_id})
+    .orderBy("type")
+    .then(goals => {
+      res.send({msg: "Get goals", goals});
+    })
+    .catch(err => {
+      res.send({msg: "Failed to get goals."});
+      console.log("Error!", err);
+    });
+};
+
 // Add or update a goal
 exports.post = (req, res) => {
   const {exercise_id, type, value} = req.body;
