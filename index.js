@@ -328,7 +328,6 @@ app.post("/goal", (req, res) => {
           });
         // console.log("Updated goal");
       }
-      res.send({msg: "Updated goal", goal});
     })
     .catch(err => {
       res.send("Error: could not post goal", err);
