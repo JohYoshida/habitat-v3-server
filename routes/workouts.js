@@ -19,6 +19,7 @@ exports.getAll = (req, res) => {
       console.log("Error!", err);
     });
 };
+
 // Post a workout
 exports.post = (req, res) => {
   const {exercise_id, reps, sets, seconds} = req.body;
