@@ -145,8 +145,8 @@ exports.getGoalData = (req, res) => {
         goals.forEach((goal, index) => {
           const {exercise, workouts} = results[index];
           data[`${exercise.name}`] = {goal, workouts};
-          res.send({msg: "Daily goal data", data});
         });
+        res.send({msg: "Daily goal data", data});
       });
     })
     .catch(err => {
