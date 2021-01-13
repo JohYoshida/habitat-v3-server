@@ -42,6 +42,9 @@ app.post("/exercises", exercises.postAll);
 // Delete an exercise by id
 app.delete("/exercise", exercises.delete);
 
+// Get daily goal graph data
+app.get("/dailyGoal", exercise.getGoalData);
+
 // Get all workouts associated with an exercise by exercise_id
 app.get("/workouts/:exercise_id", workouts.getAll);
 

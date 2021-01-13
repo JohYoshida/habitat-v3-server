@@ -130,3 +130,52 @@ exports.delete = (req, res) => {
       console.log("Error!", err);
     });
 };
+
+// Get daily goal data: daily goals and their associated exercise and workouts
+exports.getGoalData = (req, res) => {
+  const data = {};
+  getDailyGoals()
+    .then(goals => {
+      let promises = [];
+      goals.forEach(goal => {
+        promises.push(getGraphData(goal.exercise_id));
+      });
+      Promise.all(promises).then(results => {
+        goals.forEach((goal, index) => {
+          const {exercise, workouts} = results[index];
+          data[`${exercise.name}`] = {goal, workouts};
+          res.send({msg: "Daily goal data", data});
+        });
+      });
+    })
+    .catch(err => {
+      res.send({msg: "Error", data: err});
+    });
+};
+
+const getDailyGoals = () => {
+  return new Promise((resolve, reject) => {
+    knex("goals")
+      .where({type: "daily"})
+      .then(goals => resolve(goals))
+      .catch(err => reject(err));
+  });
+};
+
+const getGraphData = exercise_id => {
+  return new Promise((resolve, reject) => {
+    knex("exercises")
+      .first()
+      .where({id: exercise_id})
+      .then(exercise => {
+        const to = moment();
+        const from = moment().startOf("day");
+        knex("workouts")
+          .where({exercise_id})
+          .whereBetween("createdAt", [from, to])
+          .then(workouts => resolve({exercise, workouts}))
+          .catch(() => reject());
+      })
+      .catch(err => reject(err));
+  });
+};
