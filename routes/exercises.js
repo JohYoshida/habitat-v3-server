@@ -133,7 +133,8 @@ exports.delete = (req, res) => {
 
 // Get daily goal data: daily goals and their associated exercise and workouts
 exports.getGoalData = (req, res) => {
-  const data = {};
+  // const data = {};
+  const data = [];
   getDailyGoals()
     .then(goals => {
       let promises = [];
@@ -143,7 +144,8 @@ exports.getGoalData = (req, res) => {
       Promise.all(promises).then(results => {
         goals.forEach((goal, index) => {
           const {exercise, total} = results[index];
-          data[`${exercise.name}`] = {goal, total};
+          // data[`${exercise.name}`] = {goal, total};
+          data.push({name: exercise.name, goal: goal.value, total});
         });
         res.send({msg: "Daily goal data", data});
       });
