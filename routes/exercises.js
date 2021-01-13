@@ -142,8 +142,8 @@ exports.getGoalData = (req, res) => {
       });
       Promise.all(promises).then(results => {
         goals.forEach((goal, index) => {
-          const {exercise, workouts} = results[index];
-          data[`${exercise.name}`] = {goal, workouts};
+          const {exercise, total} = results[index];
+          data[`${exercise.name}`] = {goal, total};
         });
         res.send({msg: "Daily goal data", data});
       });
@@ -173,7 +173,17 @@ const getGraphData = exercise_id => {
         knex("workouts")
           .where({exercise_id})
           .whereBetween("createdAt", [from, to])
-          .then(workouts => resolve({exercise, workouts}))
+          .then(workouts => {
+            let total = 0;
+            workouts.forEach(workout => {
+              if (workout.seconds) {
+                total += workout.seconds;
+              } else {
+                total += workout.reps * workout.sets;
+              }
+            });
+            resolve({exercise, total});
+          })
           .catch(() => reject());
       })
       .catch(err => reject(err));
