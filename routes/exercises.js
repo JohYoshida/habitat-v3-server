@@ -133,13 +133,13 @@ exports.delete = (req, res) => {
 
 // Get daily goal data: daily goals and their associated exercise and workouts
 exports.getGoalData = (req, res) => {
-  // const data = {};
+  const {from, to} = req.params;
   const data = [];
   getDailyGoals()
     .then(goals => {
       let promises = [];
       goals.forEach(goal => {
-        promises.push(getGraphData(goal.exercise_id));
+        promises.push(getGraphData(goal.exercise_id, from, to));
       });
       Promise.all(promises).then(results => {
         goals.forEach((goal, index) => {
@@ -164,21 +164,16 @@ const getDailyGoals = () => {
   });
 };
 
-const getGraphData = exercise_id => {
+const getGraphData = (exercise_id, from, to) => {
   return new Promise((resolve, reject) => {
     knex("exercises")
       .first()
       .where({id: exercise_id})
       .then(exercise => {
-        const to = moment().format();
-        const from = moment()
-          .startOf("day")
-          .format();
         knex("workouts")
           .where({exercise_id})
           .whereBetween("createdAt", [from, to])
           .then(workouts => {
-            console.log("workouts:", workouts);
             let total = 0;
             workouts.forEach(workout => {
               if (workout.seconds) {
