@@ -140,7 +140,6 @@ exports.getGoalData = (req, res) => {
       goals.forEach(goal => {
         promises.push(getGraphData(goal.exercise_id));
       });
-      console.log(promises);
       Promise.all(promises).then(results => {
         goals.forEach((goal, index) => {
           const {exercise, workouts} = results[index];
