@@ -138,6 +138,7 @@ exports.getGoalData = (req, res) => {
   getDailyGoals()
     .then(goals => {
       let promises = [];
+      console.log(from, to);
       goals.forEach(goal => {
         promises.push(getGraphData(goal.exercise_id, from, to));
       });
