@@ -178,6 +178,7 @@ const getGraphData = exercise_id => {
           .where({exercise_id})
           .whereBetween("createdAt", [from, to])
           .then(workouts => {
+            console.log("workouts:", workouts);
             let total = 0;
             workouts.forEach(workout => {
               if (workout.seconds) {
