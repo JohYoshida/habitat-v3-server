@@ -170,8 +170,10 @@ const getGraphData = exercise_id => {
       .first()
       .where({id: exercise_id})
       .then(exercise => {
-        const to = moment();
-        const from = moment().startOf("day");
+        const to = moment().format();
+        const from = moment()
+          .startOf("day")
+          .format();
         knex("workouts")
           .where({exercise_id})
           .whereBetween("createdAt", [from, to])
