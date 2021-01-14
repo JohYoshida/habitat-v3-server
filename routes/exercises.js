@@ -144,7 +144,7 @@ exports.getGoalData = (req, res) => {
       Promise.all(promises).then(results => {
         goals.forEach((goal, index) => {
           const {exercise, total} = results[index];
-          data.push({name: exercise.name, goal: goal.value, total});
+          data.push({name: exercise.name, exercise, goal: goal.value, total});
         });
         res.send({msg: "Daily goal data", data});
       });
@@ -173,7 +173,6 @@ const getGraphData = (exercise_id, from, to) => {
           .where({exercise_id})
           .whereBetween("createdAt", [from, to])
           .then(workouts => {
-            console.log(workouts);
             let total = 0;
             workouts.forEach(workout => {
               if (workout.seconds) {
