@@ -1,6 +1,5 @@
 // Requirements
 const {v1: uuid} = require("uuid");
-const moment = require("moment");
 const dbconfig = require("../knexfile.js")[process.env.DB_ENV];
 const knex = require("knex")(dbconfig);
 
@@ -22,9 +21,8 @@ exports.getAll = (req, res) => {
 
 // Post a workout
 exports.post = (req, res) => {
-  const {exercise_id, reps, sets, seconds} = req.body;
+  const {exercise_id, reps, sets, seconds, createdAt} = req.body;
   const id = uuid();
-  const createdAt = moment().format();
   knex("workouts")
     .insert({id, exercise_id, reps, sets, seconds, createdAt})
     .then(() => {

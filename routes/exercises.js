@@ -1,6 +1,5 @@
 // Requirements
 const {v1: uuid} = require("uuid");
-const moment = require("moment");
 const dbconfig = require("../knexfile.js")[process.env.DB_ENV];
 const knex = require("knex")(dbconfig);
 
