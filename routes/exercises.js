@@ -130,8 +130,9 @@ exports.delete = (req, res) => {
     });
 };
 
+// TODO: delete method once fully depreciated by getGoalData
 // Get daily goal data: daily goals and their associated exercise and workouts
-exports.getGoalData = (req, res) => {
+exports.getDailyGoalData = (req, res) => {
   const {from, to} = req.params;
   const data = [];
   getDailyGoals()
@@ -154,10 +155,42 @@ exports.getGoalData = (req, res) => {
     });
 };
 
+// TODO: delete method once fully depreciated by getGoalsRange
 const getDailyGoals = () => {
   return new Promise((resolve, reject) => {
     knex("goals")
       .where({type: "daily"})
+      .then(goals => resolve(goals))
+      .catch(err => reject(err));
+  });
+};
+// Get daily goal data: daily goals and their associated exercise and workouts
+exports.getGoalData = (req, res) => {
+  const {type, from, to} = req.params;
+  const data = [];
+  getGoalsRange(type)
+    .then(goals => {
+      let promises = [];
+      goals.forEach(goal => {
+        promises.push(getGraphData(goal.exercise_id, from, to));
+      });
+      Promise.all(promises).then(results => {
+        goals.forEach((goal, index) => {
+          const {exercise, total} = results[index];
+          data.push({name: exercise.name, exercise, goal: goal.value, total});
+        });
+        res.send({msg: `${type} goal data`, data});
+      });
+    })
+    .catch(err => {
+      res.send({msg: "Error", data: err});
+    });
+};
+
+const getGoalsRange = type => {
+  return new Promise((resolve, reject) => {
+    knex("goals")
+      .where({type})
       .then(goals => resolve(goals))
       .catch(err => reject(err));
   });
