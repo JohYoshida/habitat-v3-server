@@ -1,7 +1,7 @@
 exports.up = function(knex) {
   return Promise.all([
     knex.schema.table("goals", table => {
-      table.integer("exercise_name");
+      table.string("exercise_name");
     })
   ]);
 };
