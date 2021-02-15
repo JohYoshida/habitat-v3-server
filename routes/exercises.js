@@ -192,7 +192,7 @@ const getGoalsRange = type => {
   return new Promise((resolve, reject) => {
     knex("goals")
       .where({type})
-      .orderBy("value")
+      .orderBy("exercise_name")
       .then(goals => resolve(goals))
       .catch(err => reject(err));
   });
