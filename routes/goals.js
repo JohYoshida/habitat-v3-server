@@ -43,7 +43,7 @@ exports.post = (req, res) => {
       knex("goals")
         .first()
         .where({id: goal.id})
-        .update({value, exercise_name})
+        .update({value})
         .then(() => {
           goal.value = value; // so the return object reflects the update
           console.log("Updated goal");
