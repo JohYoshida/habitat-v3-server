@@ -164,6 +164,7 @@ const getDailyGoals = () => {
       .catch(err => reject(err));
   });
 };
+
 // Get daily goal data: daily goals and their associated exercise and workouts
 exports.getGoalData = (req, res) => {
   const {type, from, to} = req.params;
