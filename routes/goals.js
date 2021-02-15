@@ -34,7 +34,7 @@ exports.getByExercise = (req, res) => {
 
 // Add or update a goal
 exports.post = (req, res) => {
-  const {exercise_id, type, value} = req.body;
+  const {exercise_id, exercise_name, type, value} = req.body;
   knex("goals")
     .first()
     .where({exercise_id, type})
@@ -59,7 +59,7 @@ exports.post = (req, res) => {
       const id = uuid();
       const createdAt = moment().format();
       knex("goals")
-        .insert({id, exercise_id, type, value, createdAt})
+        .insert({id, exercise_id, exercise_name, type, value, createdAt})
         .then(() => {
           console.log("Added goal");
           res.send({msg: "Added goal"});
