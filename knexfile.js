@@ -9,7 +9,10 @@ module.exports = {
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
       port: process.env.DB_PORT,
-      ssl: true
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
     },
     migrations: {
       directory: "./db/migrations",
@@ -44,7 +47,10 @@ module.exports = {
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
       port: process.env.DB_PORT,
-      ssl: true
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
     },
     pool: {
       min: 2,
